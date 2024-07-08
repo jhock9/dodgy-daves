@@ -1,6 +1,6 @@
 {
-  "name": "Scrim-s06866h",
-  "description": "https://v2.scrimba.com/the-ai-engineer-path-c02v/~015",
+  "name": "Stock Predictions AI App",
+  "description": "A stock predictions app powered by AI",
   "scripts": {
     "start": "vite",
     "dev": "vite",
