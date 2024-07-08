@@ -1,5 +1,10 @@
 <h1 align="center">Stock Predictions AI App</h1>
 
+<p align="center">
+  <img src="/screenshots/generate.png" width="380" height="550">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="/screenshots/report.png" width="380" height="550">
+</p>
+
 Welcome to Dodgy Dave's Stock Predictions! This app allows you to get stock predictions for up to 3 stock tickers at a time. The predictions are generated using an AI model that provides humorous and exaggerated stock advice.
 
 ## Table of Contents
