@@ -36,18 +36,12 @@ function renderTickers() {
 const loadingArea = document.querySelector('.loading-panel')
 const apiMessage = document.getElementById('api-message')
 
-/* 
-  Challenge: Update the `fetch` request
-   - Make a request to the Polygon API via your new Worker
-   - Catch and log any errors returned by the Worker
-*/
-
 async function fetchStockData() {
     document.querySelector('.action-panel').style.display = 'none'
     loadingArea.style.display = 'flex'
     try {
         const stockData = await Promise.all(tickersArr.map(async (ticker) => {
-            const url = `https://polygon-api-worker.guil-9d2.workers.dev/?ticker=${ticker}&startDate=${dates.startDate}&endDate=${dates.endDate}`
+            const url = `https://polygon-api-worker.jon-hocker.workers.dev/?ticker=${ticker}&startDate=${dates.startDate}&endDate=${dates.endDate}`
             const response = await fetch(url)
             if (!response.ok) {
                 const errMsg = await response.text()
@@ -82,7 +76,7 @@ async function fetchReport(data) {
     ]
     
     try {
-        const url = 'https://openai-api-worker.guil-9d2.workers.dev'
+        const url = 'https://openai-api-worker.jon-hocker.workers.dev'
         
         const response = await fetch(url, {
             method: 'POST',
