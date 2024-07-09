@@ -1,7 +1,6 @@
 import { dates } from '/utils/dates'
 
 const tickersArr = []
-
 const generateReportBtn = document.querySelector('.generate-report-btn')
 
 generateReportBtn.addEventListener('click', fetchStockData)
@@ -9,12 +8,14 @@ generateReportBtn.addEventListener('click', fetchStockData)
 document.getElementById('ticker-input-form').addEventListener('submit', (e) => {
     e.preventDefault()
     const tickerInput = document.getElementById('ticker-input')
+
     if (tickerInput.value.length > 2) {
         generateReportBtn.disabled = false
         const newTickerStr = tickerInput.value
         tickersArr.push(newTickerStr.toUpperCase())
         tickerInput.value = ''
         renderTickers()
+        
     } else {
         const label = document.getElementsByTagName('label')[0]
         label.style.color = 'red'
@@ -22,9 +23,10 @@ document.getElementById('ticker-input-form').addEventListener('submit', (e) => {
     } 
 })
 
-function renderTickers() {
+const renderTickers = () => {
     const tickersDiv = document.querySelector('.ticker-choice-display')
     tickersDiv.innerHTML = ''
+    
     tickersArr.forEach((ticker) => {
         const newTickerSpan = document.createElement('span')
         newTickerSpan.textContent = ticker
@@ -36,9 +38,10 @@ function renderTickers() {
 const loadingArea = document.querySelector('.loading-panel')
 const apiMessage = document.getElementById('api-message')
 
-async function fetchStockData() {
+const fetchStockData = async () => {
     document.querySelector('.action-panel').style.display = 'none'
     loadingArea.style.display = 'flex'
+    
     try {
         const stockData = await Promise.all(tickersArr.map(async (ticker) => {
             const url = `https://stock-pred-polygon-api-worker.okws.workers.dev/?ticker=${ticker}&startDate=${dates.startDate}&endDate=${dates.endDate}`
@@ -51,13 +54,14 @@ async function fetchStockData() {
             return response.text()
         }))
         fetchReport(stockData.join(''))
+        
     } catch (err) {
         loadingArea.innerText = 'There was an error fetching stock data.'
         console.error(err.message)
     }
 }
 
-async function fetchReport(data) {
+const fetchReport = (data) => {
     const messages = [
         {
             role: 'system',
@@ -91,17 +95,19 @@ async function fetchReport(data) {
             throw new Error(`Worker Error: ${data.error}`)
         }
         renderReport(data.content)
+        
     } catch (err) {
         console.error(err.message)
         loadingArea.innerText = 'Unable to access AI. Please refresh and try again'
     }
 }
 
-function renderReport(output) {
-    loadingArea.style.display = 'none'
+const renderReport = (output) => {
     const outputArea = document.querySelector('.output-panel')
     const report = document.createElement('p')
+    
+    report.classList.add("output")
+    loadingArea.style.display = 'none'
     outputArea.appendChild(report)
     report.textContent = output
-    outputArea.style.display = 'flex'
 }
