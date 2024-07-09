@@ -1,63 +1,64 @@
-import { dates } from '/utils/dates'
+import { dates } from '/utils/dates';
 
-const tickersArr = []
-const generateReportBtn = document.querySelector('.generate-report-btn')
+const tickersArr = [];
+const generateReportBtn = document.querySelector('.generate-report-btn');
 
-generateReportBtn.addEventListener('click', fetchStockData)
+generateReportBtn.addEventListener('click', fetchStockData);
 
 document.getElementById('ticker-input-form').addEventListener('submit', (e) => {
-    e.preventDefault()
-    const tickerInput = document.getElementById('ticker-input')
+    e.preventDefault();
+    const tickerInput = document.getElementById('ticker-input');
 
     if (tickerInput.value.length > 2) {
-        generateReportBtn.disabled = false
-        const newTickerStr = tickerInput.value
-        tickersArr.push(newTickerStr.toUpperCase())
-        tickerInput.value = ''
-        renderTickers()
-        
+        generateReportBtn.disabled = false;
+        const newTickerStr = tickerInput.value;
+        tickersArr.push(newTickerStr.toUpperCase());
+        tickerInput.value = '';
+        renderTickers();
     } else {
-        const label = document.getElementsByTagName('label')[0]
-        label.style.color = 'red'
-        label.textContent = 'You must add at least one ticker. A ticker is a 3 letter or more code for a stock. E.g TSLA for Tesla.'
+        const label = document.getElementsByTagName('label')[0];
+        label.style.color = 'red';
+        label.textContent = 'You must add at least one ticker. A ticker is a 3 letter or more code for a stock. E.g TSLA for Tesla.';
     } 
-})
+});
 
 function renderTickers() {
-    const tickersDiv = document.querySelector('.ticker-choice-display')
-    tickersDiv.innerHTML = ''
+    const tickersDiv = document.querySelector('.ticker-choice-display');
+    tickersDiv.innerHTML = '';
     
     tickersArr.forEach((ticker) => {
-        const newTickerSpan = document.createElement('span')
-        newTickerSpan.textContent = ticker
-        newTickerSpan.classList.add('ticker')
-        tickersDiv.appendChild(newTickerSpan)
-    })
+        const newTickerSpan = document.createElement('span');
+        newTickerSpan.textContent = ticker;
+        newTickerSpan.classList.add('ticker');
+        tickersDiv.appendChild(newTickerSpan);
+    });
+    console.log("Tickers rendered:", tickersArr);
 }
 
-const loadingArea = document.querySelector('.loading-panel')
-const apiMessage = document.getElementById('api-message')
+const loadingArea = document.querySelector('.loading-panel');
+const apiMessage = document.getElementById('api-message');
 
 async function fetchStockData() {
-    document.querySelector('.action-panel').style.display = 'none'
-    loadingArea.style.display = 'flex'
+    document.querySelector('.action-panel').style.display = 'none';
+    loadingArea.style.display = 'flex';
     
     try {
         const stockData = await Promise.all(tickersArr.map(async (ticker) => {
-            const url = `https://stock-pred-polygon-api-worker.okws.workers.dev/?ticker=${ticker}&startDate=${dates.startDate}&endDate=${dates.endDate}`
-            const response = await fetch(url)
+            const url = `https://stock-pred-polygon-api-worker.okws.workers.dev/?ticker=${ticker}&startDate=${dates.startDate}&endDate=${dates.endDate}`;
+            console.log(`Fetching stock data for ${ticker} from ${url}`);
+            const response = await fetch(url);
             if (!response.ok) {
-                const errMsg = await response.text()
-                throw new Error('Worker error: ' + errMsg)
+                const errMsg = await response.text();
+                throw new Error('Worker error: ' + errMsg);
             }
-            apiMessage.innerText = 'Creating report...'
-            return response.text()
-        }))
-        fetchReport(stockData.join(''))
-        
+            apiMessage.innerText = 'Creating report...';
+            return response.text();
+        }));
+        console.log("Fetched stock data:", stockData);
+        await fetchReport(stockData.join(''));
     } catch (err) {
-        loadingArea.innerText = 'There was an error fetching stock data.'
-        console.error(err.message)
+        loadingArea.innerText = 'There was an error fetching stock data.';
+        console.error("Error fetching stock data:", err.message);
     }
 }
 
@@ -77,10 +78,11 @@ async function fetchReport(data) {
             ###
             `
         }
-    ]
+    ];
     
     try {
-        const url = 'https://stock-pred-openai-api-worker.okws.workers.dev/'
+        const url = 'https://stock-pred-openai-api-worker.okws.workers.dev/';
+        console.log("Fetching report from", url);
         
         const response = await fetch(url, {
             method: 'POST',
@@ -88,26 +90,28 @@ async function fetchReport(data) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(messages)
-        })
-        const data = await response.json()
+        });
+        const data = await response.json();
         
         if (!response.ok) {
-            throw new Error(`Worker Error: ${data.error}`)
+            throw new Error(`Worker Error: ${data.error}`);
         }
-        renderReport(data.content)
+        console.log("Fetched report:", data.content);
+        renderReport(data.content);
         
     } catch (err) {
-        console.error(err.message)
-        loadingArea.innerText = 'Unable to access AI. Please refresh and try again'
+        console.error("Error fetching report:", err.message);
+        loadingArea.innerText = 'Unable to access AI. Please refresh and try again';
     }
 }
 
 function renderReport(output) {
-    const outputArea = document.querySelector('.output-panel')
-    const report = document.createElement('p')
+    const outputArea = document.querySelector('.output-panel');
+    const report = document.createElement('p');
     
-    report.classList.add("output")
-    loadingArea.style.display = 'none'
-    outputArea.appendChild(report)
-    report.textContent = output
+    report.classList.add("output");
+    loadingArea.style.display = 'none';
+    outputArea.appendChild(report);
+    report.textContent = output;
+    console.log("Report rendered:", output);
 }
