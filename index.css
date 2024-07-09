@@ -26,11 +26,6 @@ header img {
     width: 21rem;
 }
 
-main,
-footer {
-    max-width: 25rem; 
-}
-
 /* Panels */
 
 .action-panel,
@@ -50,6 +45,7 @@ footer {
     display: none;
     justify-content: flex-start;
     max-height: 28rem;
+    max-width: 25rem;
     border: 0.125rem solid;
     padding: 1rem 2rem;
 }
@@ -167,7 +163,7 @@ input[type="text"] {
 /* Footer */
 
 footer {
-    width: 100%;
+    max-width: 25rem; 
     text-align: center;
     font-size: .875rem;
 }
