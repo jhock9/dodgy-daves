@@ -61,7 +61,7 @@ const fetchStockData = async () => {
     }
 }
 
-const fetchReport = (data) => {
+const fetchReport = async (data) => {
     const messages = [
         {
             role: 'system',
