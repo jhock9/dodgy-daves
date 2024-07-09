@@ -111,6 +111,7 @@ function renderReport(output) {
     
     report.classList.add("output");
     loadingArea.style.display = 'none';
+    outputArea.style.display = 'flex';
     outputArea.appendChild(report);
     report.textContent = output;
     console.log("Report rendered:", output);
