@@ -23,7 +23,7 @@ document.getElementById('ticker-input-form').addEventListener('submit', (e) => {
     } 
 })
 
-const renderTickers = () => {
+function renderTickers() {
     const tickersDiv = document.querySelector('.ticker-choice-display')
     tickersDiv.innerHTML = ''
     
@@ -38,7 +38,7 @@ const renderTickers = () => {
 const loadingArea = document.querySelector('.loading-panel')
 const apiMessage = document.getElementById('api-message')
 
-const fetchStockData = async () => {
+async function fetchStockData() {
     document.querySelector('.action-panel').style.display = 'none'
     loadingArea.style.display = 'flex'
     
@@ -61,7 +61,7 @@ const fetchStockData = async () => {
     }
 }
 
-const fetchReport = async (data) => {
+async function fetchReport(data) {
     const messages = [
         {
             role: 'system',
@@ -102,7 +102,7 @@ const fetchReport = async (data) => {
     }
 }
 
-const renderReport = (output) => {
+function renderReport(output) {
     const outputArea = document.querySelector('.output-panel')
     const report = document.createElement('p')
     
